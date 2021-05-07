@@ -18,7 +18,7 @@ object Main {
   private def formatForHttpHeader(odt: OffsetDateTime): String =
     odt.toInstant.atOffset(ZoneOffset.UTC).format(DateTimeFormatter.RFC_1123_DATE_TIME)
 
-  private def handleRequest(): Response =
+  private[scheduledmaintenance] def handleRequest(): Response =
     new Response(
       json"""{
                "code": "ScheduledMaintenance",
@@ -29,6 +29,6 @@ object Main {
         _statusText = "Service Unavailable (scheduled maintenance)",
         _headers = js.Dictionary(
           "content-type" -> "application/json",
-          "Retry-After" -> formatForHttpHeader(offsetDateTime"""2021-05-10T23:00:00-05:00""")
+          "Retry-After" -> formatForHttpHeader(offsetDateTime"""2021-05-10T23:00:00-05:00"""),
         )))
 }
