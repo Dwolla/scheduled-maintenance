@@ -1,67 +1,69 @@
 package com.dwolla.scheduledmaintenance
 
+import cats.effect._
 import dev.holt.javatime.literals._
+import io.circe.Json
 import io.circe.literal._
-import io.circe.parser.parse
-import org.scalajs.dom.experimental._
+import munit.CatsEffectSuite
+import org.http4s.EntityDecoder
+import org.http4s.Method.GET
+import org.http4s.circe._
+import org.http4s.client.Client
+import org.http4s.client.dsl.Http4sClientDsl
+import org.http4s.headers._
+import org.http4s.implicits.{http4sKleisliResponseSyntaxOptionT, http4sLiteralsSyntax}
 
-import java.time.Instant
-import java.time.format.DateTimeFormatter
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.scalajs.js
+class ScheduledMaintenanceResponseTest
+  extends CatsEffectSuite
+    with Http4sClientDsl[IO] {
 
-class ScheduledMaintenanceResponseTest extends munit.FunSuite with FetchPolyfill {
+  private def defaultRequest =
+    GET(uri"https://hydragents.xyz/test")
 
-  private val defaultRequest =
-    new Request("https://hydragents.xyz/test", new RequestInit() {
-      method = HttpMethod.GET
-    })
+  private def client = Main.routes.map(r => Client.fromHttpApp[IO](r.orNotFound))
 
   test("the response should be a 503 status code") {
-    val output = Main.handleRequest(defaultRequest)
-
-    assert(output.status == 503)
-    assert(output.statusText == "Service Unavailable (scheduled maintenance)")
+    client.flatMap(_.run(defaultRequest))
+      .use { output => IO {
+        assertEquals(output.status.code, 503)
+        assertEquals(output.status.reason, "Service Unavailable (scheduled maintenance)")
+      }}
   }
 
   test("the response should contain an appropriate JSON body") {
-    val output = Main.handleRequest(defaultRequest)
-
-    output.text().toFuture.map { body =>
-      assert(parse(body) == Right(
-        json"""{
+    val expectedJson =
+      json"""{
                "code": "ScheduledMaintenance",
                "message": "Services are temporarily unavailable while we perform scheduled maintenance"
-             }"""))
-    }
+             }"""
+
+    client.flatMap(_.run(defaultRequest))
+      .evalMap {
+        EntityDecoder[IO, Json]
+          .decode(_, strict = true)
+          .value
+      }
+      .use { output => IO {
+        assertEquals(output, Right(expectedJson))
+      }}
   }
 
   test("the response should contain an appropriate Retry-After header") {
-    val expected = offsetDateTime"""2021-05-16T00:00:00-05:00""".toInstant
-
-    val output = Main.handleRequest(defaultRequest)
-
-    val actual: Instant =
-      output.headers
-        .get("Retry-After")
-        .map(DateTimeFormatter.RFC_1123_DATE_TIME.parse)
-        .map(Instant.from)
-        .get
-
-    assert(expected == actual)
+    client.flatMap(_.run(defaultRequest))
+      .map(_.headers.get[`Retry-After`])
+      .use { output => IO {
+        assertEquals(output, Option(`Retry-After`.unsafeFromLong(offsetDateTime"""2021-05-16T00:00:00-05:00""".toEpochSecond)))
+      }}
   }
 
   test("if the request asks for HTML, give it HTML") {
-    val req = new Request("https://hydragents.xyz/test", new RequestInit() {
-      method = HttpMethod.GET
-      headers = new Headers(js.Dictionary(
-        "Accept" -> "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-      ))
-    })
+    val accept = Accept.parse("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8").fold(throw _, identity)
+    val req = GET(uri"https://hydragents.xyz/test", accept)
 
-    val output = Main.handleRequest(req)
-
-    assert(output.status == 503)
-    assert(output.headers.get("Content-type").get == "text/html")
+    client.flatMap(_.run(req))
+      .use { output => IO {
+        assertEquals(output.status.code, 503)
+        assertEquals(output.headers.get[`Content-Type`], Option(`Content-Type`(mediaType"text/html")))
+      }}
   }
 }

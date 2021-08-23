@@ -3,7 +3,7 @@ inThisBuild(List(
   description := "Cloudflare worker to return 503s from API endpoints during scheduled maintenance",
   homepage := Some(url("https://github.com/Dwolla/scheduled-maintenance")),
   licenses += ("MIT", url("https://opensource.org/licenses/MIT")),
-  scalaVersion := "2.13.5",
+  scalaVersion := "2.13.6",
   developers := List(
     Developer(
       "bpholt",
@@ -26,48 +26,33 @@ inThisBuild(List(
   githubWorkflowPublish := Seq.empty,
 ))
 
-lazy val `scalajs-stubs` = (project in file("stubs"))
-  .settings(
-    scalacOptions ~= { _.filterNot(Set(
-      "-Wdead-code",
-      "-Wunused:implicits",
-      "-Wunused:explicits",
-      "-Wunused:imports",
-      "-Wunused:locals",
-      "-Wunused:params",
-      "-Wunused:patvars",
-      "-Wunused:privates",
-      "-Wvalue-discard",
-    ).contains) },
-  )
-  .enablePlugins(ScalaJSPlugin)
-
 lazy val `scheduled-maintenance` = (project in file("core"))
   .settings(
-    scalaVersion := "2.13.5",
+    addCompilerPlugin("org.typelevel" % "kind-projector" % "0.13.0" cross CrossVersion.full),
     libraryDependencies ++= {
-      val circeV = "0.13.0"
+      val circeV = "0.14.1"
+      val http4sV = "1.0.0-M24"
       Seq(
-        "org.scala-js" %%% "scalajs-dom" % "1.1.0",
+//        "org.typelevel" %%% "feral-cloudflare-worker" % "0.1-615f5ff-SNAPSHOT",
+        "org.http4s" %%% "http4s-client" % http4sV,
+        "org.http4s" %%% "http4s-core" % http4sV,
+        "org.http4s" %%% "http4s-jawn" % http4sV,
         "io.circe" %%% "circe-literal" % circeV,
-        "dev.holt" %%% "java-time-literals" % "1.0.0-RC2",
-        "io.github.cquiroz" %%% "scala-java-time" % "2.2.2",
+        "dev.holt" %%% "java-time-literals" % "1.0.0",
         "org.typelevel" %% "jawn-parser" % "1.0.0" % Compile,
-        "org.scalameta" %%% "munit" % "0.7.25" % Test,
+        "org.scalameta" %%% "munit" % "0.7.28" % Test,
+        "org.typelevel" %%% "munit-cats-effect-3" % "1.0.5" % Test,
         "io.circe" %%% "circe-parser" % circeV % Test,
+        "org.http4s" %%% "http4s-circe" % "1.0.0-M24" % Test,
       )
     },
     scalaJSUseMainModuleInitializer := true,
-    Test / scalaJSLinkerConfig ~= { _.withModuleKind(ModuleKind.CommonJSModule) },
-    Test / npmDependencies ++= Seq(
-      "cross-fetch" -> "3.1.4",
-    ),
+    Test / parallelExecution := false,
   )
   .enablePlugins(ScalaJSBundlerPlugin)
-  .dependsOn(`scalajs-stubs`)
 
 lazy val `scheduled-maintenance-root` = (project in file("."))
-  .aggregate(`scheduled-maintenance`, `scalajs-stubs`)
+  .aggregate(`scheduled-maintenance`)
 
 lazy val serverlessDeployCommand = settingKey[String]("serverless command to deploy the application")
 serverlessDeployCommand := "serverless deploy --verbose"
