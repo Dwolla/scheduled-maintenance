@@ -33,7 +33,7 @@ lazy val `scheduled-maintenance` = (project in file("core"))
       val circeV = "0.14.1"
       val http4sV = "1.0.0-M24"
       Seq(
-//        "org.typelevel" %%% "feral-cloudflare-worker" % "0.1-615f5ff-SNAPSHOT",
+        "org.typelevel" %%% "feral-cloudflare-worker" % "0.1-dc58235",
         "org.http4s" %%% "http4s-client" % http4sV,
         "org.http4s" %%% "http4s-core" % http4sV,
         "org.http4s" %%% "http4s-jawn" % http4sV,

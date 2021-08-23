@@ -5,13 +5,13 @@ import cats.effect._
 import cats.effect.kernel.Resource
 import cats.implicits.catsSyntaxApplicativeId
 import dev.holt.javatime.literals.offsetDateTime
-//import feral.cloudflare.worker.FetchEventListener
+import feral.cloudflare.worker.FetchEventListener
 import io.circe.literal._
 import org.http4s.headers.{Accept, `Content-Type`, `Retry-After`}
 import org.http4s.implicits._
 import org.http4s._
 
-object Main /*extends FetchEventListener*/ {
+object Main extends FetchEventListener {
   def routes: Resource[IO, HttpRoutes[IO]] =
     HttpRoutes.of[IO] {
       case req if req.headers.get[Accept].exists(_.values.exists(_.mediaRange.satisfies(mediaType"text/html"))) =>
