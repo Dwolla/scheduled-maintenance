@@ -3,7 +3,7 @@ inThisBuild(List(
   description := "Cloudflare worker to return 503s from API endpoints during scheduled maintenance",
   homepage := Some(url("https://github.com/Dwolla/scheduled-maintenance")),
   licenses += ("MIT", url("https://opensource.org/licenses/MIT")),
-  scalaVersion := "2.13.6",
+  scalaVersion := "2.13.7",
   developers := List(
     Developer(
       "bpholt",
@@ -44,7 +44,7 @@ lazy val `scalajs-stubs` = (project in file("stubs"))
 
 lazy val `scheduled-maintenance` = (project in file("core"))
   .settings(
-    scalaVersion := "2.13.6",
+    scalaVersion := "2.13.7",
     libraryDependencies ++= {
       val circeV = "0.14.1"
       Seq(
