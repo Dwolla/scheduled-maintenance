@@ -51,7 +51,7 @@ lazy val `scheduled-maintenance` = (project in file("core"))
         "io.github.cquiroz" %%% "scala-java-time" % "2.3.0",
         "org.scala-js" %%% "scala-js-macrotask-executor" % "1.0.0",
         "org.scala-js" %%% "scalajs-java-securerandom" % "1.0.0",
-        "org.typelevel" %% "jawn-parser" % "1.0.0" % Compile,
+        "org.typelevel" %% "jawn-parser" % "1.0.3" % Compile,
         "org.scalameta" %%% "munit" % "0.7.25" % Test,
         "io.circe" %%% "circe-parser" % circeV % Test,
       )
