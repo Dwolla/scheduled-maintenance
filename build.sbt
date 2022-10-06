@@ -43,7 +43,7 @@ lazy val `scheduled-maintenance` = (project in file("core"))
   .settings(
     description := "Cloudflare worker to return 503s from API endpoints during scheduled maintenance",
     libraryDependencies ++= {
-      val circeV = "0.14.2"
+      val circeV = "0.14.3"
       Seq(
         "org.scala-js" %%% "scalajs-dom" % "2.2.0",
         "io.circe" %%% "circe-literal" % circeV,
