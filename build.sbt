@@ -45,7 +45,7 @@ lazy val `scheduled-maintenance` = (project in file("core"))
     libraryDependencies ++= {
       val circeV = "0.14.2"
       Seq(
-        "org.scala-js" %%% "scalajs-dom" % "2.2.0",
+        "org.scala-js" %%% "scalajs-dom" % "2.3.0",
         "io.circe" %%% "circe-literal" % circeV,
         "dev.holt" %%% "java-time-literals" % "1.1.0",
         "io.github.cquiroz" %%% "scala-java-time" % "2.3.0",
