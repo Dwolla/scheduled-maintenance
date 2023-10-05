@@ -10,6 +10,22 @@ stages:
         sbt test
     filesToStash:
       - '**'
+  deployDevInt:
+    awsAccount: dwolla-sandbox
+    nodeLabel: nvm-sbt-deployer
+    secrets:
+      CLOUDFLARE_AUTH_KEY: scheduled-maintenance/cloudflare-api-key
+      CLOUDFLARE_AUTH_EMAIL: scheduled-maintenance/cloudflare-email-address
+      CLOUDFLARE_ACCOUNT_ID: scheduled-maintenance/cloudflare-account
+      CLOUDFLARE_ZONE_ID: scheduled-maintenance/cloudflare-zone
+    steps:
+      - |
+        set +x
+        . ${NVM_DIR}/nvm.sh --no-use
+        nvm install
+        set -x
+        npm install -g serverless serverless-cloudflare-workers
+        sbt deploy
 #  deployProd:
 #    nodeLabel: nvm-sbt-deployer
 #    secrets:
