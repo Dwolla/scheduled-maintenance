@@ -2,24 +2,32 @@ package com.dwolla.scheduledmaintenance
 
 import dev.holt.javatime.literals.offsetDateTime
 import io.circe.literal._
-import org.scalajs.dom.{FetchEvent, Request, Response, ResponseInit}
+import org.scalajs.dom._
 import stubs.Globals
 
 import java.time.format.DateTimeFormatter
 import java.time.{OffsetDateTime, ZoneOffset}
+import scala.annotation.nowarn
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.scalajs.js
+import scala.scalajs.js.JSConverters.JSRichFutureNonThenable
 
 object Main {
+  @nowarn("cat=other")
   def main(args: Array[String]): Unit =
     Globals.addEventListener("fetch",
-      (event: FetchEvent) => event.respondWith(handleRequest(event.request))
+      (event: FetchEvent) => event.respondWith(handleRequest(event.request).toJSPromise)
     )
 
   //noinspection SameParameterValue
   private def formatForHttpHeader(odt: OffsetDateTime): String =
     odt.toInstant.atOffset(ZoneOffset.UTC).format(DateTimeFormatter.RFC_1123_DATE_TIME)
 
-  private[scheduledmaintenance] def handleRequest(req: Request): Response =
+  private[scheduledmaintenance] def handleRequest(req: Request): Future[Response] = {
+    if(Option(req.headers.get("Access")).exists(_.contains("<secret-code>")))
+      return fetch(req).toFuture
+
     if (Option(req.headers.get("Accept")).exists(_.contains("text/html")))
       buildResponse("text/html",
         """<!doctype html>
@@ -137,17 +145,20 @@ object Main {
                  "code": "ScheduledMaintenance",
                  "message": "Services are temporarily unavailable while we perform scheduled maintenance"
                }""".noSpaces)
+  }
 
-  private def buildResponse(contentType: String, body: String): Response =
-    new Response(
+  private def buildResponse(contentType: String, body: String): Future[Response] = {
+    Future.successful(new Response(
       body,
       new ResponseInit {
         status = 503
         statusText = "Service Unavailable (scheduled maintenance)"
         headers = js.Dictionary(
           "content-type" -> contentType,
-          "Retry-After" -> formatForHttpHeader(offsetDateTime"""2021-05-16T00:00:00-05:00"""),
+          "Retry-After" -> formatForHttpHeader(offsetDateTime"""2023-10-16T22:00:00-05:00"""),
         )
       }
     )
+    )
+  }
 }
