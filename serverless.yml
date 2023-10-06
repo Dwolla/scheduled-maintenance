@@ -1,5 +1,5 @@
 configValidationMode: off
-frameworkVersion: ^2.39.1
+frameworkVersion: ^3.35.2
 
 service: scheduled-maintenance
 
