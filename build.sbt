@@ -54,7 +54,7 @@ lazy val `scheduled-maintenance` = (project in file("core"))
         "org.typelevel" %% "jawn-parser" % "1.0.0" % Compile,
         "org.scalameta" %%% "munit" % "0.7.5" % Test,
         "io.circe" %%% "circe-parser" % circeV % Test,
-        "org.scala-js" %% "scalajs-env-jsdom-nodejs" % "1.0.0"
+        "org.scala-js" %% "scalajs-env-jsdom-nodejs" % "1.1.0"
       )
     },
     scalaJSUseMainModuleInitializer := true,
