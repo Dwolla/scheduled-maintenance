@@ -58,3 +58,20 @@ additionalJobs:
         set -x
         npm install -g serverless@2.39.1 serverless-cloudflare-workers
         serverless remove
+  - name: End Scheduled Maintenance (Sandbox)
+    awsAccount: dwolla-sandbox
+    nodeLabel: nvm-deployer
+    checkout: true
+    secrets:
+      CLOUDFLARE_AUTH_KEY: scheduled-maintenance/cloudflare-api-key
+      CLOUDFLARE_AUTH_EMAIL: scheduled-maintenance/cloudflare-email-address
+      CLOUDFLARE_ACCOUNT_ID: scheduled-maintenance/cloudflare-account
+      CLOUDFLARE_ZONE_ID: scheduled-maintenance/cloudflare-zone
+    steps:
+      - |
+        set +x
+        . ${NVM_DIR}/nvm.sh --no-use
+        nvm install
+        set -x
+        npm install -g serverless@2.39.1 serverless-cloudflare-workers
+        serverless remove
