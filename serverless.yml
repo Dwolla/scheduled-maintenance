@@ -1,11 +1,11 @@
 configValidationMode: off
 frameworkVersion: ^2.39.1
 
-service:
-  name: scheduled-maintenance
-  config:
-    accountId: ${env:CLOUDFLARE_ACCOUNT_ID}
-    zoneId: ${env:CLOUDFLARE_ZONE_ID}
+service: scheduled-maintenance
+
+config:
+  accountId: ${env:CLOUDFLARE_ACCOUNT_ID}
+  zoneId: ${env:CLOUDFLARE_ZONE_ID}
 
 provider:
   name: cloudflare
