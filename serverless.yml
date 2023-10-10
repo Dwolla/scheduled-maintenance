@@ -1,14 +1,13 @@
 configValidationMode: off
-frameworkVersion: ^2.39.1
+frameworkVersion: '3'
 
-service:
-  name: scheduled-maintenance
-  config:
-    accountId: ${env:CLOUDFLARE_ACCOUNT_ID}
-    zoneId: ${env:CLOUDFLARE_ZONE_ID}
+service: scheduled-maintenance
 
 provider:
   name: cloudflare
+  config:
+    accountId: ${env:CLOUDFLARE_ACCOUNT_ID}
+    zoneId: ${env:CLOUDFLARE_ZONE_ID}
 
 plugins:
   - serverless-cloudflare-workers
