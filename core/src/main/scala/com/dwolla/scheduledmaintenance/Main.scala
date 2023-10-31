@@ -25,7 +25,7 @@ object Main {
     odt.toInstant.atOffset(ZoneOffset.UTC).format(DateTimeFormatter.RFC_1123_DATE_TIME)
 
   private[scheduledmaintenance] def handleRequest(req: Request): Future[Response] = {
-    if(Option(req.headers.get("Access")).exists(_.contains("<secret-code>")))
+    if(Option(req.headers.get("Access")).exists(_.contains("3d19ecbd-2fd7-4533-9d4e-846982f117e5")))
       return fetch(req).toFuture
 
     if (Option(req.headers.get("Accept")).exists(_.contains("text/html")))
