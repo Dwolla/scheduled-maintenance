@@ -18,4 +18,12 @@ functions:
     script: ${env:ARTIFACT_PATH}
     events:
       - http:
-          url: hydragents.xyz/*
+          url: api.dwolla-sandbox.com/*
+      - http:
+          url: dashboard.dwolla-sandbox.com/*
+      - http:
+          url: accounts.dwolla-sandbox.com/*
+      - http:
+          url: partners.dwolla-sandbox.com/*
+      - http:
+          url: transfer.dwolla-sandbox.com/*
