@@ -27,3 +27,13 @@ functions:
           url: partners-sandbox.dwolla.com/*
       - http:
           url: transfer-sandbox.dwolla.com/*
+      - http:
+          url: api-uat.dwolla.com/*
+      - http:
+          url: dashboard-uat.dwolla.com/*
+      - http:
+          url: accounts-uat.dwolla.com/*
+      - http:
+          url: partners-uat.dwolla.com/*
+      - http:
+          url: transfer-uat.dwolla.com/*
