@@ -18,22 +18,4 @@ functions:
     script: ${env:ARTIFACT_PATH}
     events:
       - http:
-          url: api-sandbox.dwolla.com/*
-      - http:
-          url: dashboard-sandbox.dwolla.com/*
-      - http:
-          url: accounts-sandbox.dwolla.com/*
-      - http:
-          url: partners-sandbox.dwolla.com/*
-      - http:
-          url: transfer-sandbox.dwolla.com/*
-      - http:
-          url: api-uat.dwolla.com/*
-      - http:
-          url: dashboard-uat.dwolla.com/*
-      - http:
           url: accounts-uat.dwolla.com/*
-      - http:
-          url: partners-uat.dwolla.com/*
-      - http:
-          url: transfer-uat.dwolla.com/*
