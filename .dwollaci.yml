@@ -56,4 +56,4 @@ additionalJobs:
         nvm install
         set -x
         npm install -g serverless serverless-cloudflare-workers
-        serverless remove
+        sbt remove
