@@ -10,8 +10,7 @@ stages:
         sbt test
     filesToStash:
       - '**'
-  deployDevInt:
-    awsAccount: dwolla-sandbox
+  deployUat:
     nodeLabel: nvm-sbt-deployer
     secrets:
       CLOUDFLARE_AUTH_KEY: scheduled-maintenance/cloudflare-api-key
