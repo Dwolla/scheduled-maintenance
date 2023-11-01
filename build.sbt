@@ -86,3 +86,20 @@ deploy := Def.task {
   if (exitCode == 0) exitCode
   else throw new IllegalStateException("Serverless returned a non-zero exit code. Please check the logs for more information.")
 }.value
+
+lazy val serverlessRemoveCommand = settingKey[String]("serverless command to remove the application")
+serverlessRemoveCommand := "serverless remove"
+
+lazy val remove = taskKey[Int]("remove Cloudflare worker")
+remove := Def.task {
+  import scala.sys.process._
+
+  val exitCode = Process(
+    serverlessRemoveCommand.value,
+    Option((`scheduled-maintenance-root` / baseDirectory).value),
+    "ARTIFACT_PATH" -> (`scheduled-maintenance` / Compile / fullOptJS).value.data.toString,
+  ).!
+
+  if (exitCode == 0) exitCode
+  else throw new IllegalStateException("Serverless returned a non-zero exit code. Please check the logs for more information.")
+}.value
