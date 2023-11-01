@@ -42,7 +42,7 @@ stages:
 #        sbt deploy
 additionalJobs:
   - name: End Scheduled Maintenance
-    nodeLabel: nvm-deployer
+    nodeLabel: nvm-sbt-deployer
     checkout: true
     secrets:
       CLOUDFLARE_AUTH_KEY: scheduled-maintenance/cloudflare-api-key
