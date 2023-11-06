@@ -25,7 +25,7 @@ object Main {
     odt.toInstant.atOffset(ZoneOffset.UTC).format(DateTimeFormatter.RFC_1123_DATE_TIME)
 
   private[scheduledmaintenance] def handleRequest(req: Request): Future[Response] = {
-    if(Option(req.headers.get("Access")).exists(_.contains("3d19ecbd-2fd7-4533-9d4e-846982f117e5")))
+    if(Option(req.headers.get("Access")).exists(_.contains("733a068a-4be5-4ce6-9ef3-67205de0f447")))
       return fetch(req).toFuture
 
     if (Option(req.headers.get("Accept")).exists(_.contains("text/html")))
@@ -155,7 +155,7 @@ object Main {
         statusText = "Service Unavailable (scheduled maintenance)"
         headers = js.Dictionary(
           "content-type" -> contentType,
-          "Retry-After" -> formatForHttpHeader(offsetDateTime"""2023-10-16T22:00:00-05:00"""),
+          "Retry-After" -> formatForHttpHeader(offsetDateTime"""2023-11-15T22:00:00-05:00"""),
         )
       }
     )
