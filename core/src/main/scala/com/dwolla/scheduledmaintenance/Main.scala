@@ -155,7 +155,7 @@ object Main {
         statusText = "Service Unavailable (scheduled maintenance)"
         headers = js.Dictionary(
           "content-type" -> contentType,
-          "Retry-After" -> formatForHttpHeader(offsetDateTime"""2023-11-15T22:00:00-05:00"""),
+          "Retry-After" -> formatForHttpHeader(offsetDateTime"""2023-11-18T11:00:00-06:00"""),
         )
       }
     )
